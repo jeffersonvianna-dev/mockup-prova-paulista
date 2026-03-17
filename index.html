@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mockup BI Prova Paulista</title>
+    <style>
+      :root {
+        --text: #f5f7fb;
+        --tab: #f2f0ef;
+        --tab-active: #e1b800;
+        --orange: #f5742f;
+        --green: #0f8b49;
+        --dark: #1f2329;
+        --row-a: #f3f3f3;
+        --row-b: #e6e6e6;
+        --grid: #b9c7d4;
+        --summary: #0d3657;
+        --panel-border: rgba(178, 214, 240, 0.7);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 50% 0%, rgba(18, 207, 255, 0.45), transparent 18%),
+          linear-gradient(180deg, #07111d 0%, #07111d 16%, #133c5a 16%, #133c5a 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto 0;
+        height: 150px;
+        background:
+          radial-gradient(circle at center, rgba(0, 224, 255, 0.85), transparent 14%),
+          repeating-radial-gradient(circle at center, rgba(0, 180, 255, 0.18) 0 10px, transparent 10px 20px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      .page {
+        position: relative;
+        padding: 18px 16px 28px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+
+      .brand {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+
+      .mark {
+        display: grid;
+        grid-template-columns: 20px 20px;
+        gap: 3px;
+        margin-top: 6px;
+      }
+
+      .mark span {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        background: #fff;
+      }
+
+      .mark span:last-child {
+        background: #f53838;
+      }
+
+      .title h1 {
+        margin: 0;
+        font-size: clamp(28px, 3vw, 40px);
+        font-weight: 700;
+      }
+
+      .title p {
+        margin: 2px 0 0;
+        font-size: 14px;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+      }
+
+      .title p::after {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-left: 10px;
+        border-radius: 50%;
+        background: #ff6a21;
+        vertical-align: middle;
+      }
+
+      .funder {
+        text-align: right;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.1;
+        opacity: 0.92;
+      }
+
+      .funder strong {
+        display: block;
+        font-size: 30px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 16px;
+        align-items: end;
+        flex-wrap: wrap;
+        margin: 6px 0 18px;
+      }
+
+      .field {
+        min-width: 155px;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .field select {
+        width: 100%;
+        height: 38px;
+        padding: 0 12px;
+        color: var(--text);
+        background: rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        font-size: 15px;
+      }
+
+      .board {
+        background: linear-gradient(180deg, rgba(17, 58, 88, 0.97), rgba(15, 65, 102, 0.96));
+        border-radius: 16px;
+        border: 1px solid var(--panel-border);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.24);
+        padding: 22px 24px 18px;
+        --sticky-second-left: 260px;
+      }
+
+      .toolbar {
+        position: absolute;
+        top: 86px;
+        right: 22px;
+        width: 42px;
+        height: 42px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .toolbar::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border: 3px solid #fff;
+        border-top: 0;
+        border-radius: 2px;
+        transform: translateY(2px) rotate(45deg);
+      }
+
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+
+      .tab {
+        min-width: 106px;
+        padding: 14px 12px;
+        border: 1px solid #9eb1c1;
+        background: var(--tab);
+        color: #2d3640;
+        text-align: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .tab.active {
+        background: var(--tab-active);
+        color: #111;
+        border-color: #d6b000;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(220px, 280px));
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .kpi {
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        padding: 20px 16px 18px;
+        text-align: center;
+        background: rgba(10, 54, 87, 0.45);
+      }
+
+      .kpi h2 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+
+      .kpi strong {
+        font-size: clamp(42px, 4vw, 56px);
+        font-weight: 700;
+      }
+
+      .table-title {
+        margin: 0 0 6px;
+        text-align: center;
+        font-size: clamp(24px, 2.2vw, 34px);
+        font-weight: 800;
+      }
+
+      .table-wrap {
+        overflow: auto;
+        border-radius: 10px;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+      }
+
+      .table-wrap.no-legend {
+        margin-bottom: 0;
+      }
+
+      table {
+        width: 100%;
+        min-width: 1540px;
+        border-collapse: collapse;
+        background: #fff;
+        color: #3f4347;
+      }
+
+      table.descriptor-table {
+        width: auto;
+        table-layout: fixed;
+      }
+
+      table.descriptor-table th,
+      table.descriptor-table td {
+        white-space: normal;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--grid);
+        padding: 7px 8px;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      thead th {
+        background: #f6f6f6;
+        font-size: 12px;
+        font-weight: 400;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      thead th:hover {
+        background: #ebf1f6;
+      }
+
+      th.sticky,
+      td.sticky {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+      }
+
+      th.sticky-2,
+      td.sticky-2 {
+        position: sticky;
+        left: var(--sticky-second-left);
+        z-index: 2;
+      }
+
+      td.sticky,
+      td.sticky-2 {
+        background: inherit;
+      }
+
+      thead th.sticky,
+      thead th.sticky-2 {
+        z-index: 4;
+      }
+
+      .name-cell {
+        min-width: 260px;
+        text-align: left;
+      }
+
+      .ra-cell {
+        min-width: 120px;
+        text-align: left;
+      }
+
+      .name-cell-tight {
+        min-width: 230px;
+        text-align: left;
+      }
+
+      .students,
+      th.students {
+        min-width: 92px;
+        color: #fff;
+        background: var(--dark);
+      }
+
+      td.students {
+        background: var(--dark) !important;
+        color: #fff;
+      }
+
+      .metric-part,
+      th.metric-part {
+        color: #fff;
+        background: var(--orange);
+        font-weight: 700;
+      }
+
+      .metric-hit,
+      th.metric-hit {
+        color: #fff;
+        background: var(--green);
+        font-weight: 700;
+      }
+
+      .farol-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .farol-symbol {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #fff;
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.18);
+      }
+
+      .farol-top {
+        background: #2388ff;
+      }
+
+      .farol-good {
+        background: #1e9b57;
+      }
+
+      .farol-regular {
+        background: #d7a922;
+      }
+
+      .farol-bad {
+        background: #c84c3f;
+      }
+
+      .sort-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .sort-arrow {
+        font-size: 10px;
+        opacity: 0.35;
+      }
+
+      th.sorted-asc .sort-arrow,
+      th.sorted-desc .sort-arrow {
+        opacity: 1;
+      }
+
+      th.sorted-asc .sort-arrow::before {
+        content: "▲";
+      }
+
+      th.sorted-desc .sort-arrow::before {
+        content: "▼";
+      }
+
+      tbody tr:nth-child(odd) {
+        background: var(--row-a);
+      }
+
+      tbody tr:nth-child(even) {
+        background: var(--row-b);
+      }
+
+      tbody tr.total-row {
+        background: var(--summary);
+        color: #fff;
+        font-weight: 700;
+      }
+
+      tbody tr.total-row td {
+        border-color: #476d8f;
+      }
+
+      tbody tr.total-row .students,
+      tbody tr.total-row .metric-part,
+      tbody tr.total-row .metric-hit {
+        background: inherit !important;
+      }
+
+      .legend {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        border-radius: 10px;
+        background: rgba(8, 35, 55, 0.38);
+      }
+
+      .legend h3 {
+        margin: 0 0 10px;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .legend-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+        gap: 10px 18px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #f5f7fb;
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      .placeholder-note {
+        margin-top: 18px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 14px;
+      }
+
+      .left-text {
+        text-align: left;
+      }
+
+      .link-cell {
+        color: #2f67d8;
+        font-weight: 700;
+      }
+
+      .descriptor-serie {
+        width: 28px;
+        min-width: 28px;
+        max-width: 28px;
+      }
+
+      .descriptor-hits {
+        width: 28px;
+        min-width: 28px;
+        max-width: 28px;
+      }
+
+      .descriptor-disciplina {
+        width: 45px;
+        min-width: 45px;
+        max-width: 45px;
+      }
+
+      .descriptor-descritor {
+        width: 143px;
+        min-width: 143px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+      }
+
+      .descriptor-num {
+        width: 28px;
+        min-width: 28px;
+        max-width: 28px;
+      }
+
+      .descriptor-link {
+        width: 28px;
+        min-width: 28px;
+        max-width: 28px;
+      }
+
+      @media (max-width: 1100px) {
+        .kpis {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar {
+          display: none;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          padding: 14px 10px 24px;
+        }
+
+        .board {
+          padding: 18px 12px 12px;
+        }
+
+        .title p {
+          letter-spacing: 3px;
+        }
+
+        .filters {
+          gap: 10px;
+        }
+
+        .field {
+          min-width: calc(50% - 10px);
+          flex: 1 1 calc(50% - 10px);
+        }
+
+        .tab {
+          min-width: 92px;
+          padding: 12px 8px;
+          font-size: 12px;
+        }
+
+        .legend-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <div class="brand">
+          <div>
+            <div class="mark" aria-hidden="true">
+              <span></span>
+              <span></span>
+            </div>
+            <small>Educação</small>
+          </div>
+          <div class="title">
+            <h1>Prova Paulista 1º Bimestre</h1>
+            <p>Ano Letivo 2026</p>
+          </div>
+        </div>
+        <div class="funder">
+          <strong>FDE</strong>
+          FUNDAÇÃO PARA O<br />DESENVOLVIMENTO<br />DA EDUCAÇÃO
+        </div>
+      </header>
+
+      <section class="filters" id="filters" aria-label="Filtros"></section>
+
+      <section class="board">
+        <div class="toolbar" aria-hidden="true"></div>
+
+        <nav class="tabs" aria-label="Abas do painel">
+          <button class="tab" data-view="rede" type="button">Rede</button>
+          <button class="tab" data-view="regional" type="button">Regional</button>
+          <button class="tab" data-view="escola" type="button">Escola</button>
+          <button class="tab" data-view="turma" type="button">Turma</button>
+          <button class="tab" data-view="descritor" type="button">Descritor</button>
+        </nav>
+
+        <section class="kpis" id="kpis" aria-label="Indicadores principais"></section>
+
+        <h2 class="table-title" id="table-title"></h2>
+
+        <div class="table-wrap" id="table-wrap">
+          <table>
+            <thead id="table-head"></thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+
+        <section class="legend" id="legend" aria-label="Legenda do farol">
+          <h3>Legenda do Farol SARESP</h3>
+          <div class="legend-grid">
+            <div class="legend-item">
+              <span class="farol-symbol farol-top">★</span>
+              <span>Ótimo resultado! Nesse ritmo, você baterá a meta SARESP</span>
+            </div>
+            <div class="legend-item">
+              <span class="farol-symbol farol-good">↗</span>
+              <span>Bom resultado! Você está em um bom caminho para bater a meta SARESP</span>
+            </div>
+            <div class="legend-item">
+              <span class="farol-symbol farol-regular">■</span>
+              <span>Atenção! Seu resultado está estagnado</span>
+            </div>
+            <div class="legend-item">
+              <span class="farol-symbol farol-bad">↘</span>
+              <span>Muita atenção! Seu resultado está em queda</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="placeholder-note" id="placeholder-note" hidden>
+          Mockup da aba ainda não detalhado nesta etapa.
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const subjectColumns = [
+        { key: "port", label: "PORT" },
+        { key: "mat", label: "MAT" },
+        { key: "hist", label: "HIST" },
+        { key: "geo", label: "GEO" },
+        { key: "ing", label: "ING" },
+        { key: "cie", label: "CIE" },
+        { key: "fis", label: "FÍS" },
+        { key: "qui", label: "QUI" },
+        { key: "bio", label: "BIO" },
+        { key: "filo", label: "FILO" },
+        { key: "soc", label: "SOC" }
+      ];
+
+      const views = {
+        rede: {
+          filters: [
+            { label: "Modalidade", options: ["Todos", "Ensino Fundamental", "Ensino Médio"] },
+            { label: "Série", options: ["Todos", "6º Ano", "7º Ano", "8º Ano", "9º Ano"] },
+            { label: "Turno", options: ["Todos", "Manhã", "Tarde", "Noite"] }
+          ],
+          kpis: [
+            { label: "(%) de Participação", value: "95,4%" },
+            { label: "(%) Acertos", value: "58,5%" }
+          ],
+          title: "REDE ESTADUAL DE ENSINO",
+          firstColumn: { key: "regional", label: "Regional" },
+          rows: [
+            { regional: "JALES", students: "9.708", participation: "98,4%", hits: "61,5%", farol: "good", subjects: ["64,1%", "60,7%", "58,7%", "64,9%", "66,2%", "63,6%", "66,3%", "58,1%", "57,1%", "58,8%", "70,8%", "50,5%", "73,1%", "60,0%", "69,9%", "54,7%", "61,9%", "55,1%", "63,9%"] },
+            { regional: "MIRANTE DO PARANAPANEMA", students: "5.620", participation: "98,0%", hits: "73,4%", farol: "top", subjects: ["75,0%", "73,4%", "72,6%", "76,1%", "77,2%", "78,5%", "77,4%", "70,3%", "72,2%", "69,6%", "77,3%", "63,1%", "77,9%", "64,5%", "82,2%", "63,9%", "69,4%", "68,4%", "72,7%"] },
+            { regional: "SANTO ANASTÁCIO", students: "6.114", participation: "97,9%", hits: "60,4%", farol: "good", subjects: ["63,0%", "59,6%", "58,3%", "64,1%", "64,2%", "64,2%", "66,0%", "55,5%", "55,8%", "56,8%", "64,7%", "52,6%", "64,8%", "56,5%", "63,5%", "49,1%", "61,3%", "53,5%", "60,6%"] },
+            { regional: "ADAMANTINA", students: "13.023", participation: "97,8%", hits: "57,3%", farol: "regular", subjects: ["58,5%", "56,7%", "53,8%", "59,3%", "63,5%", "59,7%", "62,3%", "56,4%", "55,0%", "55,4%", "62,4%", "49,4%", "61,1%", "61,3%", "68,0%", "53,6%", "64,7%", "51,8%", "58,3%"] },
+            { regional: "OURINHOS", students: "12.523", participation: "97,3%", hits: "53,3%", farol: "bad", subjects: ["56,6%", "52,6%", "49,5%", "55,4%", "57,3%", "55,8%", "59,3%", "48,9%", "47,8%", "50,4%", "53,2%", "44,1%", "56,6%", "50,5%", "56,5%", "42,0%", "52,7%", "48,0%", "52,6%"] },
+            { regional: "SERTÃOZINHO", students: "13.502", participation: "97,3%", hits: "68,9%", farol: "top", subjects: ["70,9%", "66,9%", "68,9%", "71,8%", "72,5%", "71,1%", "75,9%", "68,9%", "68,5%", "67,5%", "67,8%", "60,1%", "70,6%", "69,4%", "73,5%", "58,4%", "74,8%", "64,9%", "70,2%"] },
+            { regional: "MAUÁ", students: "48.716", participation: "97,0%", hits: "59,4%", farol: "regular", subjects: ["63,2%", "59,3%", "54,1%", "59,4%", "64,2%", "59,4%", "61,7%", "59,4%", "58,7%", "59,1%", "62,7%", "51,9%", "63,6%", "60,1%", "63,5%", "51,5%", "61,6%", "54,6%", "61,5%"] }
+          ],
+          totalRow: { regional: "Total", students: "2.598.644", participation: "95,4%", hits: "58,5%", farol: "regular", subjects: ["61,4%", "57,9%", "54,6%", "59,8%", "62,9%", "59,0%", "62,8%", "57,7%", "57,3%", "57,7%", "60,7%", "50,4%", "62,9%", "57,5%", "62,3%", "50,0%", "59,5%", "54,6%", "61,1%"] }
+        },
+        regional: {
+          filters: [
+            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
+            { label: "Modalidade", options: ["Todos", "Ensino Fundamental", "Ensino Médio"] },
+            { label: "Série", options: ["Todos", "6º Ano", "7º Ano", "8º Ano", "9º Ano"] },
+            { label: "Turno", options: ["Todos", "Manhã", "Tarde", "Noite"] }
+          ],
+          kpis: [
+            { label: "(%) de Participação", value: "95,4%" },
+            { label: "(%) Acertos", value: "58,5%" }
+          ],
+          title: "DIRETORIA REGIONAL DE ENSINO",
+          firstColumn: { key: "regional", label: "Escolas" },
+          rows: [
+            { regional: "ALVINO BITTENCOURT PROFESSOR - 2045", students: "168", participation: "96,3%", hits: "96,3%", farol: "top", subjects: ["96,5%", "96,8%", "91,7%", "99,0%", "0,0%", "95,8%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "CONSUELO FREIRE BRANDÃO PROFESSORA - 228", students: "122", participation: "100,0%", hits: "94,3%", farol: "top", subjects: ["93,7%", "95,5%", "91,1%", "95,7%", "0,0%", "94,2%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "JARDIM MAGALI - 925858", students: "135", participation: "100,0%", hits: "93,9%", farol: "good", subjects: ["96,0%", "94,0%", "91,6%", "91,0%", "0,0%", "91,9%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "JOSE MARCELINO DA FONSECA MAIOR - 863", students: "145", participation: "100,0%", hits: "93,4%", farol: "good", subjects: ["95,8%", "94,9%", "76,4%", "94,3%", "0,0%", "93,7%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "ANNITA ATALLA PROFESSORA - 1764", students: "144", participation: "99,4%", hits: "93,3%", farol: "good", subjects: ["94,0%", "92,7%", "91,0%", "95,1%", "0,0%", "93,2%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "ADEMAR HIROSHI SUDA PROF - 1351", students: "293", participation: "98,9%", hits: "92,9%", farol: "good", subjects: ["93,3%", "93,0%", "87,2%", "90,4%", "0,0%", "96,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "SÓCRATES BRASILEIRO SAMPAIO - 118", students: "118", participation: "99,2%", hits: "92,4%", farol: "regular", subjects: ["93,1%", "91,8%", "79,3%", "92,3%", "0,0%", "98,6%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "NELSON ANTONIO ROMAO PADRE - 24971", students: "224", participation: "99,1%", hits: "92,3%", farol: "regular", subjects: ["93,8%", "92,3%", "84,5%", "94,4%", "0,0%", "92,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "RENATO DE AZEVEDO REZENDE - 912852", students: "55", participation: "100,0%", hits: "92,0%", farol: "regular", subjects: ["94,3%", "91,9%", "88,0%", "92,0%", "0,0%", "89,5%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "PEDRO VOSS PROFESSOR - 4856", students: "109", participation: "100,0%", hits: "91,7%", farol: "regular", subjects: ["92,2%", "93,9%", "83,3%", "88,4%", "0,0%", "92,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "ALFREDO PAULINO - 3360", students: "151", participation: "98,7%", hits: "91,6%", farol: "regular", subjects: ["93,1%", "91,2%", "87,2%", "91,8%", "0,0%", "91,7%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "VISCONDE DE INHAUMA ALMIRANTE - 772", students: "181", participation: "99,8%", hits: "91,6%", farol: "regular", subjects: ["92,7%", "93,8%", "80,6%", "90,8%", "0,0%", "91,1%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "MARIA LOURDES ROSARIO NEGREIROS - 208", students: "208", participation: "99,2%", hits: "91,6%", farol: "regular", subjects: ["93,4%", "90,1%", "92,2%", "95,0%", "0,0%", "88,6%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "MARIO PATARRA FRATTINI PROF - 17140", students: "111", participation: "97,3%", hits: "91,4%", farol: "bad", subjects: ["92,5%", "93,0%", "79,9%", "88,7%", "0,0%", "91,2%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] }
+          ],
+          totalRow: { regional: "Total", students: "2.598.665", participation: "95,4%", hits: "58,5%", farol: "regular", subjects: ["61,4%", "57,9%", "54,6%", "59,8%", "62,9%", "59,0%", "62,8%", "57,7%", "57,3%", "57,7%", "60,7%", "50,4%", "62,9%", "57,5%", "62,3%", "50,0%", "59,5%", "54,6%", "61,1%"] }
+        },
+        escola: {
+          filters: [
+            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
+            { label: "Escola", options: ["Todos", "Alvino Bittencourt Professor - 2045", "Consuelo Freire Brandão Professora - 228", "Jardim Magali - 925858"] },
+            { label: "Modalidade", options: ["Todos", "Ensino Fundamental", "Ensino Médio"] },
+            { label: "Série", options: ["Todos", "4º Ano", "5º Ano", "3ª Série"] },
+            { label: "Turno", options: ["Todos", "Manhã", "Tarde", "Integral", "Noite"] }
+          ],
+          kpis: [
+            { label: "(%) de Participação", value: "95,4%" },
+            { label: "(%) Acertos", value: "58,5%" }
+          ],
+          title: "ESCOLA ESTADUAL",
+          firstColumn: { key: "regional", label: "Turmas" },
+          showLegend: false,
+          showFarol: false,
+          subjects: [
+            { key: "port", label: "PORT" },
+            { key: "mat", label: "MAT" },
+            { key: "hist", label: "HIST" },
+            { key: "geo", label: "GEO" },
+            { key: "ing", label: "ING" },
+            { key: "cie", label: "CIE" },
+            { key: "fis", label: "FÍS" },
+            { key: "qui", label: "QUI" },
+            { key: "bio", label: "BIO" },
+            { key: "filo", label: "FILO" },
+            { key: "soc", label: "SOC" }
+          ],
+          rows: [
+            { regional: "5º ANO E TARDE ANUAL - 40069010", students: "31", participation: "100,0%", hits: "99,0%", subjects: ["99,7%", "98,2%", "100,0%", "98,7%", "0,0%", "98,7%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "5º ANO A MANHÃ ANUAL - 40035355", students: "15", participation: "100,0%", hits: "98,7%", subjects: ["98,7%", "99,7%", "97,3%", "93,3%", "0,0%", "100,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "3ª SERIE B NOITE ANUAL - 40100057", students: "9", participation: "100,0%", hits: "98,4%", subjects: ["98,1%", "99,1%", "100,0%", "100,0%", "98,4%", "0,0%", "0,0%", "0,0%", "97,2%", "100,0%", "100,0%", "97,8%", "0,0%", "97,8%", "100,0%"] },
+            { regional: "5º ANO C INTEGRAL 9H ANUAL - 40030172", students: "29", participation: "98,6%", hits: "98,4%", subjects: ["98,3%", "98,6%", "97,9%", "97,9%", "0,0%", "98,6%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "4º ANO A TARDE ANUAL - 40064687", students: "22", participation: "100,0%", hits: "98,3%", subjects: ["100,0%", "100,0%", "80,0%", "99,1%", "0,0%", "100,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "4º ANO B INTEGRAL 9H ANUAL - 40053186", students: "32", participation: "96,9%", hits: "98,2%", subjects: ["98,7%", "97,6%", "99,4%", "100,0%", "0,0%", "97,1%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "4º ANO A TARDE ANUAL - 40029968", students: "22", participation: "95,5%", hits: "98,2%", subjects: ["99,8%", "99,3%", "81,9%", "100,0%", "0,0%", "100,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "5º ANO B MANHÃ ANUAL - 40052756", students: "33", participation: "100,0%", hits: "98,1%", subjects: ["98,9%", "99,5%", "91,5%", "96,4%", "0,0%", "97,6%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "5º ANO B TARDE ANUAL - 40065531", students: "34", participation: "97,1%", hits: "98,0%", subjects: ["98,5%", "97,6%", "96,4%", "98,8%", "0,0%", "98,5%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "4º ANO A TARDE ANUAL - 40073484", students: "18", participation: "100,0%", hits: "98,0%", subjects: ["98,6%", "100,0%", "100,0%", "100,0%", "0,0%", "90,6%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "4050 - ADMINISTRAÇÃO - 3ª SERIE A INTEGRAL", students: "13", participation: "100,0%", hits: "97,9%", subjects: ["96,6%", "99,6%", "99,2%", "0,0%", "97,8%", "0,0%", "0,0%", "100,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
+            { regional: "4º ANO D TARDE ANUAL - 40066480", students: "21", participation: "95,2%", hits: "97,8%", subjects: ["97,3%", "98,5%", "99,0%", "99,0%", "0,0%", "96,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] }
+          ],
+          totalRow: { regional: "Total", students: "2.598.665", participation: "95,4%", hits: "58,5%", subjects: ["61,4%", "57,9%", "54,6%", "59,8%", "62,9%", "59,0%", "62,8%", "57,7%", "57,3%", "57,7%", "60,7%", "50,4%", "62,9%", "57,5%", "62,3%"] }
+        },
+        turma: {
+          filters: [
+            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
+            { label: "Escola", options: ["Todos", "Alvino Bittencourt Professor - 2045", "Consuelo Freire Brandão Professora - 228", "Jardim Magali - 925858"] },
+            { label: "Modalidade", options: ["Todos", "Ensino Fundamental", "Ensino Médio"] },
+            { label: "Série", options: ["Todos", "4º Ano", "5º Ano", "3ª Série"] },
+            { label: "Turno", options: ["Todos", "Manhã", "Tarde", "Integral", "Noite"] },
+            { label: "Selecione uma Turma", options: ["5º ANO A TARDE ANUAL - 40073818", "5º ANO B TARDE ANUAL - 40065531", "4º ANO A TARDE ANUAL - 40064687"] }
+          ],
+          kpis: [
+            { label: "(%) de Participação", value: "95,5%" },
+            { label: "(%) Acertos", value: "41,2%" }
+          ],
+          title: "RESULTADOS DA TURMA",
+          firstColumn: { key: "ra", label: "NR RA" },
+          secondColumn: { key: "regional", label: "Nome", stickyOffset: 120, width: 270 },
+          showLegend: false,
+          showFarol: false,
+          subjects: [
+            { key: "port", label: "PORT" },
+            { key: "mat", label: "MAT" },
+            { key: "hist", label: "HIST" },
+            { key: "geo", label: "GEO" },
+            { key: "ing", label: "ING" },
+            { key: "cie", label: "CIE" },
+            { key: "fis", label: "FÍS" },
+            { key: "qui", label: "QUI" },
+            { key: "bio", label: "BIO" },
+            { key: "filo", label: "FILO" },
+            { key: "soc", label: "SOC" }
+          ],
+          rows: [
+            { ra: "000114426046", regional: "AILSON DOS ANJOS CARMO JUNIOR", participation: "100,0%", hits: "21,3%", subjects: ["30,0%", "26,7%", "20,0%", "10,0%", "20,0%", "20,0%", "0,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114390373", regional: "ANA CLARA GONCALVES SCHMIDT", participation: "100,0%", hits: "55,0%", subjects: ["60,0%", "60,0%", "40,0%", "60,0%", "80,0%", "40,0%", "80,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114393751", regional: "ANA VITORIA PEREIRA DA SILVA", participation: "100,0%", hits: "32,5%", subjects: ["45,0%", "20,0%", "40,0%", "40,0%", "20,0%", "10,0%", "20,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000115998259", regional: "BRENO SASAKI", participation: "100,0%", hits: "56,3%", subjects: ["80,0%", "46,7%", "40,0%", "70,0%", "80,0%", "40,0%", "60,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000112561457", regional: "CARLOS HENRIQUE MORAIS LINO", participation: "0,0%", hits: "", subjects: ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""] },
+            { ra: "000114744468", regional: "DANDARA VITORIA PEREIRA DA SILVA", participation: "100,0%", hits: "36,3%", subjects: ["60,0%", "20,0%", "30,0%", "80,0%", "40,0%", "0,0%", "20,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114127285", regional: "DAVI FERREIRA SILVA", participation: "100,0%", hits: "20,0%", subjects: ["20,0%", "26,7%", "10,0%", "10,0%", "20,0%", "30,0%", "20,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000115326733", regional: "ENZO ALVES DA SILVA", participation: "100,0%", hits: "35,0%", subjects: ["40,0%", "46,7%", "40,0%", "40,0%", "20,0%", "10,0%", "20,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000115324006", regional: "GISELE SOUZA DE JESUS", participation: "100,0%", hits: "28,8%", subjects: ["35,0%", "26,7%", "40,0%", "20,0%", "20,0%", "10,0%", "80,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000120341360", regional: "ISABELLY JESUS DA SILVA", participation: "100,0%", hits: "46,3%", subjects: ["70,0%", "46,7%", "30,0%", "30,0%", "60,0%", "30,0%", "40,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114457632", regional: "JOAO VITOR ARAUJO DE BARROS", participation: "100,0%", hits: "33,8%", subjects: ["50,0%", "40,0%", "40,0%", "20,0%", "40,0%", "20,0%", "0,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114418082", regional: "KAMILLY LORRAYNE ARIMATEIA DAMACENO", participation: "100,0%", hits: "50,0%", subjects: ["45,0%", "60,0%", "40,0%", "70,0%", "80,0%", "20,0%", "60,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000115844259", regional: "KRISTAL RODRIGUES RAINHO", participation: "100,0%", hits: "51,3%", subjects: ["75,0%", "33,3%", "50,0%", "60,0%", "80,0%", "30,0%", "60,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114298720", regional: "LORENZO DORNELAS ESTALISE COSTA", participation: "100,0%", hits: "27,5%", subjects: ["30,0%", "33,3%", "40,0%", "20,0%", "20,0%", "20,0%", "20,0%", "", "", "", "", "", "", "", ""] },
+            { ra: "000114811856", regional: "LUIZ EDUARDO CORREIA PEDRO", participation: "100,0%", hits: "25,0%", subjects: ["35,0%", "20,0%", "20,0%", "20,0%", "20,0%", "30,0%", "20,0%", "", "", "", "", "", "", "", ""] }
+          ],
+          totalRow: { ra: "Total", regional: "", participation: "95,5%", hits: "41,2%", subjects: ["50,4%", "39,0%", "39,4%", "43,1%", "54,7%", "25,6%", "37,6%", "", "", "", "", "", "", "", ""] }
+        },
+        descritor: {
+          filters: [
+            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
+            { label: "Escola", options: ["Todos", "Matemática - 2700", "Língua Portuguesa - 1200"] },
+            { label: "Modalidade", options: ["Todos", "Ensino Fundamental", "Ensino Médio"] },
+            { label: "Série", options: ["Todos", "1ª Série", "2ª Série", "3ª Série"] },
+            { label: "Turno", options: ["Todos", "Manhã", "Tarde", "Integral", "Noite"] },
+            { label: "Turma", options: ["1ª SÉRIE 1B INTEGRAL 9H ANUAL - 40317143", "1ª SÉRIE 1A MANHÃ - 40317144"] },
+            { label: "Disciplina", options: ["Matemática - 2700", "Língua Portuguesa - 1200"] }
+          ],
+          kpis: [
+            { label: "(%) de Participação", value: "93,9%" },
+            { label: "(%) Acertos", value: "71,8%" }
+          ],
+          title: "RESULTADOS POR DESCRITOR",
+          showLegend: false,
+          showFarol: false,
+          descriptorColumns: [
+            { key: "serie", label: "Série", type: "text", cellClass: "metric-part descriptor-serie" },
+            { key: "hits", label: "% Acertos", type: "text", cellClass: "metric-hit descriptor-hits" },
+            { key: "disciplina", label: "Disciplina", type: "text", cellClass: "descriptor-disciplina" },
+            { key: "descritor", label: "Descritor", type: "text", cellClass: "left-text descriptor-descritor" },
+            { key: "numQuestoes", label: "# Questões", type: "text", cellClass: "descriptor-num" },
+            { key: "questoes", label: "Questões", type: "link", cellClass: "link-cell descriptor-link" },
+            { key: "aulas", label: "Aulas", type: "link", cellClass: "link-cell descriptor-link" }
+          ],
+          rows: [
+            { serie: "1ª SÉRIE", hits: "10,0%", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "33,3%", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "46,7%", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", numQuestoes: "3", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "53,3%", disciplina: "Matemática - 2700", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "60,0%", disciplina: "Matemática - 2700", descritor: "Resolver equações completas do 2º grau.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "63,3%", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "70,0%", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "83,3%", disciplina: "Matemática - 2700", descritor: "Raiz quadrada e raiz cúbica de números racionais.", numQuestoes: "3", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "90,0%", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
+            { serie: "1ª SÉRIE", hits: "93,3%", disciplina: "Matemática - 2700", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" }
+          ]
+        }
+      };
+
+      const tableHead = document.getElementById("table-head");
+      const tableBody = document.getElementById("table-body");
+      const tableWrap = document.getElementById("table-wrap");
+      const filtersRoot = document.getElementById("filters");
+      const kpisRoot = document.getElementById("kpis");
+      const tableTitle = document.getElementById("table-title");
+      const placeholderNote = document.getElementById("placeholder-note");
+      const legend = document.getElementById("legend");
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+
+      let activeView = "descritor";
+      let currentSort = { key: null, direction: "asc" };
+
+      function normalizeNumber(value) {
+        return Number(String(value).replace(/\./g, "").replace("%", "").replace(",", "."));
+      }
+
+      function farolWeight(color) {
+        return { bad: 1, regular: 2, good: 3, top: 4 }[color] || 0;
+      }
+
+      function farolSymbol(color) {
+        return { top: "★", good: "↗", regular: "■", bad: "↘" }[color] || "•";
+      }
+
+      function getRowValue(row, key) {
+        if (key === "ra") return row.ra || "";
+        if (key === "regional") return row.regional;
+        if (key === "students") return normalizeNumber(row.students || "0");
+        if (key === "participation") return normalizeNumber(row.participation);
+        if (key === "hits") return normalizeNumber(row.hits || "0");
+        if (key === "farol") return farolWeight(row.farol);
+
+        const activeSubjectColumns = views[activeView]?.subjects || subjectColumns;
+        const subjectIndex = activeSubjectColumns.findIndex((column) => column.key === key);
+        if (subjectIndex >= 0) return normalizeNumber(row.subjects[subjectIndex]);
+        return "";
+      }
+
+      function buildFilters(view) {
+        filtersRoot.innerHTML = "";
+        view.filters.forEach((filter, index) => {
+          const field = document.createElement("div");
+          field.className = "field";
+          const selectId = `filter-${index}`;
+
+          field.innerHTML = `
+            <label for="${selectId}">${filter.label}</label>
+            <select id="${selectId}">
+              ${filter.options.map((option) => `<option>${option}</option>`).join("")}
+            </select>
+          `;
+
+          filtersRoot.appendChild(field);
+        });
+      }
+
+      function buildKpis(view) {
+        kpisRoot.innerHTML = "";
+        kpisRoot.hidden = !view.kpis.length;
+        view.kpis.forEach((kpi) => {
+          const card = document.createElement("article");
+          card.className = "kpi";
+          card.innerHTML = `<h2>${kpi.label}</h2><strong>${kpi.value}</strong>`;
+          kpisRoot.appendChild(card);
+        });
+      }
+
+      function buildTableHead(view) {
+        if (view.descriptorColumns) {
+          document.querySelector(".table-wrap table").classList.add("descriptor-table");
+          tableHead.innerHTML = `
+            <tr>
+              ${view.descriptorColumns
+                .map((column) => {
+                  const classes = column.cellClass || "";
+                  return `<th class="${classes}" data-key="${column.key}"><span class="sort-label">${column.label}<span class="sort-arrow"></span></span></th>`;
+                })
+                .join("")}
+            </tr>
+          `;
+          return;
+        }
+
+        document.querySelector(".table-wrap table").classList.remove("descriptor-table");
+
+        const activeSubjectColumns = view.subjects || subjectColumns;
+        const columns = [
+          { key: view.firstColumn.key, label: view.firstColumn.label, stickyClass: "sticky", extraClass: view.firstColumn.key === "ra" ? "ra-cell" : "name-cell" },
+          ...(view.secondColumn
+            ? [{ key: view.secondColumn.key, label: view.secondColumn.label, stickyClass: "sticky-2", extraClass: "name-cell-tight" }]
+            : [{ key: "students", label: "Total<br />Alunos", stickyClass: "sticky-2 students", extraClass: "students" }]),
+          { key: "participation", label: "(%) de<br />Participação", extraClass: "metric-part" },
+          { key: "hits", label: "(%) de<br />Acertos", extraClass: "metric-hit" },
+          ...(view.showFarol === false ? [] : [{ key: "farol", label: "Farol SARESP" }]),
+          ...activeSubjectColumns
+        ];
+
+        tableHead.innerHTML = `
+          <tr>
+            ${columns
+              .map((column) => {
+                const classes = [column.stickyClass, column.extraClass].filter(Boolean).join(" ");
+                return `<th class="${classes}" data-key="${column.key}"><span class="sort-label">${column.label}<span class="sort-arrow"></span></span></th>`;
+              })
+              .join("")}
+          </tr>
+        `;
+      }
+
+      function buildRow(row, isTotal = false) {
+        if (views[activeView].descriptorColumns) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = views[activeView].descriptorColumns
+            .map((column) => {
+              const value = row[column.key] || "";
+              const classes = [column.cellClass].filter(Boolean).join(" ");
+              const className = classes ? ` class="${classes}"` : "";
+              return `<td${className}>${value}</td>`;
+            })
+            .join("");
+          return tr;
+        }
+
+        const tr = document.createElement("tr");
+        if (isTotal) tr.className = "total-row";
+        const activeSubjectColumns = views[activeView].subjects || subjectColumns;
+
+        const metricCells = [
+          `<td class="metric-part">${row.participation}</td>`,
+          `<td class="metric-hit">${row.hits}</td>`
+        ];
+
+        if (views[activeView].showFarol !== false) {
+          metricCells.push(`<td><div class="farol-cell"><span class="farol-symbol farol-${row.farol}">${farolSymbol(row.farol)}</span></div></td>`);
+        }
+
+        tr.innerHTML = [
+          `<td class="sticky ${views[activeView].firstColumn.key === "ra" ? "ra-cell" : "name-cell"}">${row[views[activeView].firstColumn.key] || ""}</td>`,
+          views[activeView].secondColumn
+            ? `<td class="sticky-2 name-cell-tight">${row[views[activeView].secondColumn.key] || ""}</td>`
+            : `<td class="sticky-2 students">${row.students}</td>`,
+          ...metricCells,
+          ...row.subjects.slice(0, activeSubjectColumns.length).map((value) => `<td>${value}</td>`)
+        ].join("");
+
+        return tr;
+      }
+
+      function renderRows(view) {
+        const rows = [...view.rows];
+
+        if (view.descriptorColumns) {
+          if (currentSort.key) {
+            rows.sort((a, b) => {
+              const valueA = a[currentSort.key] || "";
+              const valueB = b[currentSort.key] || "";
+              const numericA = valueA.includes("%") ? normalizeNumber(valueA) : null;
+              const numericB = valueB.includes("%") ? normalizeNumber(valueB) : null;
+
+              if (numericA !== null && numericB !== null) {
+                return currentSort.direction === "asc" ? numericA - numericB : numericB - numericA;
+              }
+
+              return currentSort.direction === "asc"
+                ? String(valueA).localeCompare(String(valueB), "pt-BR")
+                : String(valueB).localeCompare(String(valueA), "pt-BR");
+            });
+          }
+
+          tableBody.innerHTML = "";
+          rows.forEach((row) => tableBody.appendChild(buildRow(row)));
+          return;
+        }
+
+        if (currentSort.key) {
+          rows.sort((a, b) => {
+            const valueA = getRowValue(a, currentSort.key);
+            const valueB = getRowValue(b, currentSort.key);
+
+            if (typeof valueA === "string") {
+              return currentSort.direction === "asc"
+                ? valueA.localeCompare(valueB, "pt-BR")
+                : valueB.localeCompare(valueA, "pt-BR");
+            }
+
+            return currentSort.direction === "asc" ? valueA - valueB : valueB - valueA;
+          });
+        }
+
+        tableBody.innerHTML = "";
+        rows.forEach((row) => tableBody.appendChild(buildRow(row)));
+        tableBody.appendChild(buildRow(view.totalRow, true));
+      }
+
+      function updateSortIndicators() {
+        tableHead.querySelectorAll("th[data-key]").forEach((header) => {
+          header.classList.remove("sorted-asc", "sorted-desc");
+          if (header.dataset.key === currentSort.key) {
+            header.classList.add(currentSort.direction === "asc" ? "sorted-asc" : "sorted-desc");
+          }
+        });
+      }
+
+      function bindHeaderSorting(view) {
+        tableHead.querySelectorAll("th[data-key]").forEach((header) => {
+          header.addEventListener("click", () => {
+            const key = header.dataset.key;
+            const direction = currentSort.key === key && currentSort.direction === "asc" ? "desc" : "asc";
+            currentSort = { key, direction };
+            updateSortIndicators();
+            renderRows(view);
+          });
+        });
+      }
+
+      function setActiveTab() {
+        tabs.forEach((tab) => {
+          tab.classList.toggle("active", tab.dataset.view === activeView);
+        });
+      }
+
+      function renderView() {
+        const view = views[activeView];
+
+        if (!view) {
+          filtersRoot.innerHTML = "";
+          kpisRoot.innerHTML = "";
+          tableTitle.textContent = "";
+          tableHead.innerHTML = "";
+          tableBody.innerHTML = "";
+          placeholderNote.hidden = false;
+          return;
+        }
+
+        placeholderNote.hidden = true;
+        legend.hidden = view.showLegend === false;
+        tableWrap.classList.toggle("no-legend", view.showLegend === false);
+        document.querySelector(".board").style.setProperty("--sticky-second-left", view.secondColumn ? "120px" : "260px");
+        buildFilters(view);
+        buildKpis(view);
+        tableTitle.textContent = view.title;
+        buildTableHead(view);
+        updateSortIndicators();
+        renderRows(view);
+        bindHeaderSorting(view);
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          activeView = tab.dataset.view;
+          currentSort = { key: null, direction: "asc" };
+          setActiveTab();
+          renderView();
+        });
+      });
+
+      setActiveTab();
+      renderView();
+    </script>
+  </body>
+</html>
