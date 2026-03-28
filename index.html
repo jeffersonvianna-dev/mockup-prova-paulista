@@ -995,21 +995,6 @@
         return [...coreProfiles, ...technicalProfiles];
       }
 
-      function buildDigitalRows(entities, baseScore) {
-        return buildDigitalProfiles(baseScore).map((profile, index) => ({
-          entity: entities[index % entities.length],
-          ...profile
-        }));
-      }
-
-      function buildTurmaDigitalRows(students, baseScore) {
-        return buildDigitalProfiles(baseScore).map((profile, index) => ({
-          entity: students[index % students.length].ra,
-          name: students[index % students.length].name,
-          ...profile
-        }));
-      }
-
       function createDigitalFilters(baseFilters) {
         return [
           ...baseFilters,
@@ -1020,9 +1005,11 @@
       }
 
       function createDigitalColumns(firstLabel, secondLabel) {
-        const columns = [
-          { key: "entity", label: firstLabel, type: "text", cellClass: `left-text ${secondLabel ? "descriptor-ra" : "descriptor-entity"}` }
-        ];
+        const columns = [];
+
+        if (firstLabel) {
+          columns.push({ key: "entity", label: firstLabel, type: "text", cellClass: `left-text ${secondLabel ? "descriptor-ra" : "descriptor-entity"}` });
+        }
 
         if (secondLabel) {
           columns.push({ key: "name", label: secondLabel, type: "text", cellClass: "left-text descriptor-name" });
@@ -1054,88 +1041,46 @@
       const digitalModes = {
         rede: createDigitalMode({
           title: "REDE ESTADUAL DE ENSINO",
-          firstLabel: "Regional",
           filters: createDigitalFilters([]),
           kpis: [
             { label: "(%) de Participação", value: "94,1%" },
             { label: "Nota Média", value: "6,9" }
           ],
-          rows: buildDigitalRows(["JALES", "MAUÁ", "OURINHOS", "SERTÃOZINHO", "ADAMANTINA"], 6.4)
+          rows: buildDigitalProfiles(6.4)
         }),
         regional: createDigitalMode({
           title: "DIRETORIA REGIONAL DE ENSINO",
-          firstLabel: "Escolas",
-          filters: createDigitalFilters([{ label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] }]),
+          filters: createDigitalFilters([{ label: "Regional", options: ["Mauá"] }]),
           kpis: [
             { label: "(%) de Participação", value: "93,6%" },
             { label: "Nota Média", value: "6,8" }
           ],
-          rows: buildDigitalRows(
-            [
-              "ALVINO BITTENCOURT PROFESSOR - 2045",
-              "CONSUELO FREIRE BRANDÃO PROFESSORA - 228",
-              "JARDIM MAGALI - 925858",
-              "JOSE MARCELINO DA FONSECA MAIOR - 863",
-              "ADEMAR HIROSHI SUDA PROF - 1351"
-            ],
-            6.3
-          )
+          rows: buildDigitalProfiles(6.3)
         }),
         escola: createDigitalMode({
           title: "ESCOLA ESTADUAL",
-          firstLabel: "Turmas",
           filters: createDigitalFilters([
-            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
-            { label: "Escola", options: ["Todos", "Alvino Bittencourt Professor - 2045", "Consuelo Freire Brandão Professora - 228", "Jardim Magali - 925858"] }
+            { label: "Regional", options: ["Mauá"] },
+            { label: "Escola", options: ["ALVINO BITTENCOURT PROFESSOR - 2045"] }
           ]),
           kpis: [
             { label: "(%) de Participação", value: "95,0%" },
             { label: "Nota Média", value: "7,0" }
           ],
-          rows: buildDigitalRows(
-            [
-              "2ª SÉRIE A MANHÃ - 40317144",
-              "2ª SÉRIE B INTEGRAL - 40317143",
-              "3ª SÉRIE A MANHÃ - 40100057",
-              "3ª SÉRIE B NOITE - 40100058",
-              "3ª SÉRIE TÉCNICO ADM - 4050"
-            ],
-            6.5
-          )
+          rows: buildDigitalProfiles(6.5)
         }),
         turma: createDigitalMode({
           title: "RESULTADOS DA TURMA",
-          firstLabel: "NR RA",
-          secondLabel: "Nome",
           filters: createDigitalFilters([
-            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
-            { label: "Escola", options: ["Todos", "Alvino Bittencourt Professor - 2045", "Consuelo Freire Brandão Professora - 228", "Jardim Magali - 925858"] },
-            { label: "Selecione uma Turma", options: ["2ª SÉRIE A MANHÃ - 40317144", "2ª SÉRIE B INTEGRAL - 40317143", "3ª SÉRIE A NOITE - 40100057"] }
+            { label: "Regional", options: ["Mauá"] },
+            { label: "Escola", options: ["ALVINO BITTENCOURT PROFESSOR - 2045"] },
+            { label: "Selecione uma Turma", options: ["2ª SÉRIE A MANHÃ - 40317144"] }
           ]),
           kpis: [
             { label: "(%) de Participação", value: "96,2%" },
             { label: "Nota Média", value: "6,7" }
           ],
-          rows: buildTurmaDigitalRows(
-            [
-              { ra: "000114426046", name: "AILSON DOS ANJOS CARMO JUNIOR" },
-              { ra: "000114390373", name: "ANA CLARA GONCALVES SCHMIDT" },
-              { ra: "000114393751", name: "ANA VITORIA PEREIRA DA SILVA" },
-              { ra: "000115998259", name: "BRENO SASAKI" },
-              { ra: "000114744468", name: "DANDARA VITORIA PEREIRA DA SILVA" },
-              { ra: "000114127285", name: "DAVI FERREIRA SILVA" },
-              { ra: "000115326733", name: "ENZO ALVES DA SILVA" },
-              { ra: "000115324006", name: "GISELE SOUZA DE JESUS" },
-              { ra: "000120341360", name: "ISABELLY JESUS DA SILVA" },
-              { ra: "000114457632", name: "JOAO VITOR ARAUJO DE BARROS" },
-              { ra: "000114418082", name: "KAMILLY LORRAYNE ARIMATEIA DAMACENO" },
-              { ra: "000115844259", name: "KRISTAL RODRIGUES RAINHO" },
-              { ra: "000114298720", name: "LORENZO DORNELAS ESTALISE COSTA" },
-              { ra: "000114811856", name: "LUIZ EDUARDO CORREIA PEDRO" },
-              { ra: "000112561457", name: "CARLOS HENRIQUE MORAIS LINO" }
-            ],
-            6.1
-          )
+          rows: buildDigitalProfiles(6.1)
         })
       };
 
