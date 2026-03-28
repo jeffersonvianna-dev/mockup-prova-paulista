@@ -717,18 +717,36 @@
 
     <script>
       const subjectColumns = [
-        { key: "port", label: "PORT" },
         { key: "mat", label: "MAT" },
+        { key: "port", label: "PORT" },
+        { key: "ing", label: "ING" },
         { key: "hist", label: "HIST" },
         { key: "geo", label: "GEO" },
-        { key: "ing", label: "ING" },
         { key: "cie", label: "CIE" },
+        { key: "filo", label: "FILO" },
+        { key: "soc", label: "SOC" },
+        { key: "bio", label: "BIO" },
         { key: "fis", label: "FÍS" },
         { key: "qui", label: "QUI" },
-        { key: "bio", label: "BIO" },
-        { key: "filo", label: "FILO" },
-        { key: "soc", label: "SOC" }
+        { key: "fin", label: "FIN" },
+        { key: "tec", label: "TEC" }
       ];
+
+      const subjectValueIndexByKey = {
+        mat: 1,
+        port: 0,
+        ing: 4,
+        hist: 2,
+        geo: 3,
+        cie: 5,
+        filo: 9,
+        soc: 10,
+        bio: 8,
+        fis: 6,
+        qui: 7,
+        fin: 11,
+        tec: 12
+      };
 
       const views = {
         rede: {
@@ -801,19 +819,7 @@
           firstColumn: { key: "regional", label: "Turmas" },
           showLegend: false,
           showFarol: false,
-          subjects: [
-            { key: "port", label: "PORT" },
-            { key: "mat", label: "MAT" },
-            { key: "hist", label: "HIST" },
-            { key: "geo", label: "GEO" },
-            { key: "ing", label: "ING" },
-            { key: "cie", label: "CIE" },
-            { key: "fis", label: "FÍS" },
-            { key: "qui", label: "QUI" },
-            { key: "bio", label: "BIO" },
-            { key: "filo", label: "FILO" },
-            { key: "soc", label: "SOC" }
-          ],
+          subjects: subjectColumns,
           rows: [
             { regional: "5º ANO E TARDE ANUAL - 40069010", students: "31", participation: "100,0%", hits: "99,0%", subjects: ["99,7%", "98,2%", "100,0%", "98,7%", "0,0%", "98,7%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
             { regional: "5º ANO A MANHÃ ANUAL - 40035355", students: "15", participation: "100,0%", hits: "98,7%", subjects: ["98,7%", "99,7%", "97,3%", "93,3%", "0,0%", "100,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%", "0,0%"] },
@@ -848,19 +854,7 @@
           secondColumn: { key: "regional", label: "Nome", stickyOffset: 120, width: 270 },
           showLegend: false,
           showFarol: false,
-          subjects: [
-            { key: "port", label: "PORT" },
-            { key: "mat", label: "MAT" },
-            { key: "hist", label: "HIST" },
-            { key: "geo", label: "GEO" },
-            { key: "ing", label: "ING" },
-            { key: "cie", label: "CIE" },
-            { key: "fis", label: "FÍS" },
-            { key: "qui", label: "QUI" },
-            { key: "bio", label: "BIO" },
-            { key: "filo", label: "FILO" },
-            { key: "soc", label: "SOC" }
-          ],
+          subjects: subjectColumns,
           rows: [
             { ra: "000114426046", regional: "AILSON DOS ANJOS CARMO JUNIOR", participation: "100,0%", hits: "21,3%", subjects: ["30,0%", "26,7%", "20,0%", "10,0%", "20,0%", "20,0%", "0,0%", "", "", "", "", "", "", "", ""] },
             { ra: "000114390373", regional: "ANA CLARA GONCALVES SCHMIDT", participation: "100,0%", hits: "55,0%", subjects: ["60,0%", "60,0%", "40,0%", "60,0%", "80,0%", "40,0%", "80,0%", "", "", "", "", "", "", "", ""] },
@@ -981,6 +975,10 @@
         return { top: "★", good: "↗", regular: "■", bad: "↘" }[color] || "•";
       }
 
+      function getVisibleSubjects(row, columns) {
+        return columns.map((column) => row.subjects?.[subjectValueIndexByKey[column.key]] ?? "");
+      }
+
       function getRowValue(row, key) {
         if (key === "ra") return row.ra || "";
         if (key === "regional") return row.regional;
@@ -992,7 +990,7 @@
         const renderedView = getRenderedView();
         const activeSubjectColumns = renderedView?.subjects || subjectColumns;
         const subjectIndex = activeSubjectColumns.findIndex((column) => column.key === key);
-        if (subjectIndex >= 0) return normalizeNumber(row.subjects[subjectIndex]);
+        if (subjectIndex >= 0) return normalizeNumber(getVisibleSubjects(row, activeSubjectColumns)[subjectIndex] || "0");
         return "";
       }
 
@@ -1098,6 +1096,7 @@
         const tr = document.createElement("tr");
         if (isTotal) tr.className = "total-row";
         const activeSubjectColumns = renderedView?.subjects || subjectColumns;
+        const displayedSubjects = getVisibleSubjects(row, activeSubjectColumns);
 
         const metricCells = [
           `<td class="metric-part">${row.participation}</td>`,
@@ -1114,7 +1113,7 @@
             ? `<td class="sticky-2 name-cell-tight">${row[renderedView.secondColumn.key] || ""}</td>`
             : `<td class="sticky-2 students">${row.students}</td>`,
           ...metricCells,
-          ...row.subjects.slice(0, activeSubjectColumns.length).map((value) => `<td>${value}</td>`)
+          ...displayedSubjects.map((value) => `<td>${value}</td>`)
         ].join("");
 
         return tr;
