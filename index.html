@@ -910,7 +910,8 @@
             { label: "Série", options: ["Todos", "1ª Série", "2ª Série", "3ª Série"] },
             { label: "Turno", options: ["Todos", "Manhã", "Tarde", "Integral", "Noite"] },
             { label: "Turma", options: ["1ª SÉRIE 1B INTEGRAL 9H ANUAL - 40317143", "1ª SÉRIE 1A MANHÃ - 40317144"] },
-            { label: "Disciplina", options: ["Matemática - 2700", "Língua Portuguesa - 1200"] }
+            { label: "Disciplina", options: ["Matemática - 2700", "Língua Portuguesa - 1200"] },
+            { label: "Prova", options: ["Prova Física", "Prova Digital"] }
           ],
           kpis: [
             { label: "(%) de Participação", value: "93,9%" },
@@ -924,22 +925,23 @@
               descriptorColumns: [
                 { key: "serie", label: "Série", type: "text", cellClass: "metric-part descriptor-serie" },
                 { key: "hits", label: "% Acertos", type: "text", cellClass: "metric-hit descriptor-hits" },
+                { key: "prova", label: "Prova", type: "text", cellClass: "descriptor-type" },
                 { key: "disciplina", label: "Disciplina", type: "text", cellClass: "left-text descriptor-disciplina" },
                 { key: "descritor", label: "Descritor", type: "text", cellClass: "left-text descriptor-descritor" },
                 { key: "aula", label: "Aula", type: "link", cellClass: "link-cell descriptor-link" },
                 { key: "questao", label: "Questão", type: "link", cellClass: "link-cell descriptor-link" }
               ],
               rows: [
-                { serie: "1ª SÉRIE", hits: "10,0%", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "33,3%", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "46,7%", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "53,3%", disciplina: "Matemática - 2700", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "60,0%", disciplina: "Matemática - 2700", descritor: "Resolver equações completas do 2º grau.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "63,3%", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "70,0%", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "83,3%", disciplina: "Matemática - 2700", descritor: "Raiz quadrada e raiz cúbica de números racionais.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "90,0%", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", aula: "🔗", questao: "🔗" },
-                { serie: "1ª SÉRIE", hits: "93,3%", disciplina: "Matemática - 2700", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", aula: "🔗", questao: "🔗" }
+                { serie: "1ª SÉRIE", hits: "10,0%", prova: "Física", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "33,3%", prova: "Física", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "46,7%", prova: "Física", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", aula: "🔗", questao: "🔗" },
+                { serie: "2ª SÉRIE", hits: "53,3%", prova: "Itinerário", disciplina: "Língua Portuguesa - 1200", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", aula: "🔗", questao: "🔗" },
+                { serie: "2ª SÉRIE", hits: "60,0%", prova: "Expansão", disciplina: "Língua Portuguesa - 1200", descritor: "Resolver equações completas do 2º grau.", aula: "🔗", questao: "🔗" },
+                { serie: "2ª SÉRIE", hits: "63,3%", prova: "Técnico", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", aula: "🔗", questao: "🔗" },
+                { serie: "3ª SÉRIE", hits: "70,0%", prova: "Itinerário", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", aula: "🔗", questao: "🔗" },
+                { serie: "3ª SÉRIE", hits: "83,3%", prova: "Expansão", disciplina: "Língua Portuguesa - 1200", descritor: "Raiz quadrada e raiz cúbica de números racionais.", aula: "🔗", questao: "🔗" },
+                { serie: "3ª SÉRIE", hits: "90,0%", prova: "Técnico", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", aula: "🔗", questao: "🔗" },
+                { serie: "3ª SÉRIE", hits: "93,3%", prova: "Técnico", disciplina: "Língua Portuguesa - 1200", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", aula: "🔗", questao: "🔗" }
               ]
             },
             descritor: {
@@ -947,21 +949,22 @@
               descriptorColumns: [
                 { key: "serie", label: "Série", type: "text", cellClass: "metric-part descriptor-serie" },
                 { key: "hits", label: "% Acertos", type: "text", cellClass: "metric-hit descriptor-hits" },
+                { key: "prova", label: "Prova", type: "text", cellClass: "descriptor-type" },
                 { key: "disciplina", label: "Disciplina", type: "text", cellClass: "left-text descriptor-disciplina" },
                 { key: "descritor", label: "Descritor", type: "text", cellClass: "left-text descriptor-descritor" },
                 { key: "numQuestoes", label: "# Questões", type: "text", cellClass: "descriptor-num" }
               ],
               rows: [
-                { serie: "1ª SÉRIE", hits: "10,0%", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", numQuestoes: "1" },
-                { serie: "1ª SÉRIE", hits: "33,3%", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", numQuestoes: "2" },
-                { serie: "1ª SÉRIE", hits: "46,7%", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", numQuestoes: "3" },
-                { serie: "1ª SÉRIE", hits: "53,3%", disciplina: "Matemática - 2700", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", numQuestoes: "1" },
-                { serie: "1ª SÉRIE", hits: "60,0%", disciplina: "Matemática - 2700", descritor: "Resolver equações completas do 2º grau.", numQuestoes: "2" },
-                { serie: "1ª SÉRIE", hits: "63,3%", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", numQuestoes: "1" },
-                { serie: "1ª SÉRIE", hits: "70,0%", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", numQuestoes: "2" },
-                { serie: "1ª SÉRIE", hits: "83,3%", disciplina: "Matemática - 2700", descritor: "Raiz quadrada e raiz cúbica de números racionais.", numQuestoes: "3" },
-                { serie: "1ª SÉRIE", hits: "90,0%", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", numQuestoes: "1" },
-                { serie: "1ª SÉRIE", hits: "93,3%", disciplina: "Matemática - 2700", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", numQuestoes: "2" }
+                { serie: "1ª SÉRIE", hits: "10,0%", prova: "Física", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", numQuestoes: "1" },
+                { serie: "1ª SÉRIE", hits: "33,3%", prova: "Física", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", numQuestoes: "2" },
+                { serie: "1ª SÉRIE", hits: "46,7%", prova: "Física", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", numQuestoes: "3" },
+                { serie: "2ª SÉRIE", hits: "53,3%", prova: "Itinerário", disciplina: "Língua Portuguesa - 1200", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", numQuestoes: "1" },
+                { serie: "2ª SÉRIE", hits: "60,0%", prova: "Expansão", disciplina: "Língua Portuguesa - 1200", descritor: "Resolver equações completas do 2º grau.", numQuestoes: "2" },
+                { serie: "2ª SÉRIE", hits: "63,3%", prova: "Técnico", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", numQuestoes: "1" },
+                { serie: "3ª SÉRIE", hits: "70,0%", prova: "Itinerário", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", numQuestoes: "2" },
+                { serie: "3ª SÉRIE", hits: "83,3%", prova: "Expansão", disciplina: "Língua Portuguesa - 1200", descritor: "Raiz quadrada e raiz cúbica de números racionais.", numQuestoes: "3" },
+                { serie: "3ª SÉRIE", hits: "90,0%", prova: "Técnico", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", numQuestoes: "1" },
+                { serie: "3ª SÉRIE", hits: "93,3%", prova: "Técnico", disciplina: "Língua Portuguesa - 1200", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", numQuestoes: "2" }
               ]
             }
           }
