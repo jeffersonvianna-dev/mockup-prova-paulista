@@ -232,6 +232,47 @@
         font-weight: 700;
       }
 
+      .analysis-switch {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 18px;
+      }
+
+      .analysis-switch[hidden] {
+        display: none;
+      }
+
+      .analysis-switch-label {
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .analysis-switch-buttons {
+        display: inline-flex;
+        padding: 4px;
+        border-radius: 999px;
+        background: rgba(26, 34, 47, 0.8);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+      }
+
+      .analysis-switch-button {
+        min-width: 140px;
+        padding: 8px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 160ms ease, color 160ms ease;
+      }
+
+      .analysis-switch-button.active {
+        background: #f4f1ed;
+        color: #232a33;
+      }
+
       .table-title {
         margin: 0 0 6px;
         text-align: center;
@@ -258,7 +299,8 @@
       }
 
       table.descriptor-table {
-        width: auto;
+        width: 100%;
+        min-width: 1120px;
         table-layout: fixed;
       }
 
@@ -492,41 +534,40 @@
       }
 
       .descriptor-serie {
-        width: 28px;
-        min-width: 28px;
-        max-width: 28px;
+        width: 110px;
+        min-width: 110px;
+        max-width: 110px;
       }
 
       .descriptor-hits {
-        width: 28px;
-        min-width: 28px;
-        max-width: 28px;
+        width: 110px;
+        min-width: 110px;
+        max-width: 110px;
       }
 
       .descriptor-disciplina {
-        width: 45px;
-        min-width: 45px;
-        max-width: 45px;
+        width: 290px;
+        min-width: 290px;
       }
 
       .descriptor-descritor {
-        width: 143px;
-        min-width: 143px;
+        width: 470px;
+        min-width: 470px;
         white-space: normal;
         overflow-wrap: anywhere;
         line-height: 1.25;
       }
 
       .descriptor-num {
-        width: 28px;
-        min-width: 28px;
-        max-width: 28px;
+        width: 120px;
+        min-width: 120px;
+        max-width: 120px;
       }
 
       .descriptor-link {
-        width: 28px;
-        min-width: 28px;
-        max-width: 28px;
+        width: 95px;
+        min-width: 95px;
+        max-width: 95px;
       }
 
       @media (max-width: 1100px) {
@@ -567,6 +608,20 @@
           font-size: 12px;
         }
 
+        .analysis-switch {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .analysis-switch-buttons {
+          width: 100%;
+        }
+
+        .analysis-switch-button {
+          flex: 1 1 0;
+          min-width: 0;
+        }
+
         .legend-grid {
           grid-template-columns: 1fr;
         }
@@ -605,10 +660,18 @@
           <button class="tab" data-view="regional" type="button">Regional</button>
           <button class="tab" data-view="escola" type="button">Escola</button>
           <button class="tab" data-view="turma" type="button">Turma</button>
-          <button class="tab" data-view="descritor" type="button">Descritor</button>
+          <button class="tab" data-view="questao" type="button">Questão</button>
         </nav>
 
         <section class="kpis" id="kpis" aria-label="Indicadores principais"></section>
+
+        <section class="analysis-switch" id="analysis-switch" aria-label="Alternar análise" hidden>
+          <span class="analysis-switch-label">Analisar por:</span>
+          <div class="analysis-switch-buttons" role="tablist" aria-label="Analisar por">
+            <button class="analysis-switch-button" data-analysis-mode="questao" type="button">Questão</button>
+            <button class="analysis-switch-button" data-analysis-mode="descritor" type="button">Descritor</button>
+          </div>
+        </section>
 
         <h2 class="table-title" id="table-title"></h2>
 
@@ -817,7 +880,7 @@
           ],
           totalRow: { ra: "Total", regional: "", participation: "95,5%", hits: "41,2%", subjects: ["50,4%", "39,0%", "39,4%", "43,1%", "54,7%", "25,6%", "37,6%", "", "", "", "", "", "", "", ""] }
         },
-        descritor: {
+        questao: {
           filters: [
             { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
             { label: "Escola", options: ["Todos", "Matemática - 2700", "Língua Portuguesa - 1200"] },
@@ -831,30 +894,55 @@
             { label: "(%) de Participação", value: "93,9%" },
             { label: "(%) Acertos", value: "71,8%" }
           ],
-          title: "RESULTADOS POR DESCRITOR",
           showLegend: false,
           showFarol: false,
-          descriptorColumns: [
-            { key: "serie", label: "Série", type: "text", cellClass: "metric-part descriptor-serie" },
-            { key: "hits", label: "% Acertos", type: "text", cellClass: "metric-hit descriptor-hits" },
-            { key: "disciplina", label: "Disciplina", type: "text", cellClass: "descriptor-disciplina" },
-            { key: "descritor", label: "Descritor", type: "text", cellClass: "left-text descriptor-descritor" },
-            { key: "numQuestoes", label: "# Questões", type: "text", cellClass: "descriptor-num" },
-            { key: "questoes", label: "Questões", type: "link", cellClass: "link-cell descriptor-link" },
-            { key: "aulas", label: "Aulas", type: "link", cellClass: "link-cell descriptor-link" }
-          ],
-          rows: [
-            { serie: "1ª SÉRIE", hits: "10,0%", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "33,3%", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "46,7%", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", numQuestoes: "3", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "53,3%", disciplina: "Matemática - 2700", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "60,0%", disciplina: "Matemática - 2700", descritor: "Resolver equações completas do 2º grau.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "63,3%", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "70,0%", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "83,3%", disciplina: "Matemática - 2700", descritor: "Raiz quadrada e raiz cúbica de números racionais.", numQuestoes: "3", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "90,0%", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", numQuestoes: "1", aulas: "🔗", questoes: "🔗" },
-            { serie: "1ª SÉRIE", hits: "93,3%", disciplina: "Matemática - 2700", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", numQuestoes: "2", aulas: "🔗", questoes: "🔗" }
-          ]
+          analysisModes: {
+            questao: {
+              title: "RESULTADOS POR QUESTÃO",
+              descriptorColumns: [
+                { key: "serie", label: "Série", type: "text", cellClass: "metric-part descriptor-serie" },
+                { key: "hits", label: "% Acertos", type: "text", cellClass: "metric-hit descriptor-hits" },
+                { key: "disciplina", label: "Disciplina", type: "text", cellClass: "left-text descriptor-disciplina" },
+                { key: "descritor", label: "Descritor", type: "text", cellClass: "left-text descriptor-descritor" },
+                { key: "aula", label: "Aula", type: "link", cellClass: "link-cell descriptor-link" },
+                { key: "questao", label: "Questão", type: "link", cellClass: "link-cell descriptor-link" }
+              ],
+              rows: [
+                { serie: "1ª SÉRIE", hits: "10,0%", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "33,3%", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "46,7%", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "53,3%", disciplina: "Matemática - 2700", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "60,0%", disciplina: "Matemática - 2700", descritor: "Resolver equações completas do 2º grau.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "63,3%", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "70,0%", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "83,3%", disciplina: "Matemática - 2700", descritor: "Raiz quadrada e raiz cúbica de números racionais.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "90,0%", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", aula: "🔗", questao: "🔗" },
+                { serie: "1ª SÉRIE", hits: "93,3%", disciplina: "Matemática - 2700", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", aula: "🔗", questao: "🔗" }
+              ]
+            },
+            descritor: {
+              title: "RESULTADOS POR DESCRITOR",
+              descriptorColumns: [
+                { key: "serie", label: "Série", type: "text", cellClass: "metric-part descriptor-serie" },
+                { key: "hits", label: "% Acertos", type: "text", cellClass: "metric-hit descriptor-hits" },
+                { key: "disciplina", label: "Disciplina", type: "text", cellClass: "left-text descriptor-disciplina" },
+                { key: "descritor", label: "Descritor", type: "text", cellClass: "left-text descriptor-descritor" },
+                { key: "numQuestoes", label: "# Questões", type: "text", cellClass: "descriptor-num" }
+              ],
+              rows: [
+                { serie: "1ª SÉRIE", hits: "10,0%", disciplina: "Matemática - 2700", descritor: "Resolver problema que envolva equação do 2º grau.", numQuestoes: "1" },
+                { serie: "1ª SÉRIE", hits: "33,3%", disciplina: "Matemática - 2700", descritor: "Analisar a construção do esboço gráfico de uma função.", numQuestoes: "2" },
+                { serie: "1ª SÉRIE", hits: "46,7%", disciplina: "Matemática - 2700", descritor: "Associar pares ordenados a pontos no plano cartesiano.", numQuestoes: "3" },
+                { serie: "1ª SÉRIE", hits: "53,3%", disciplina: "Matemática - 2700", descritor: "Interpretar informações apresentadas por meio de coordenadas cartesianas.", numQuestoes: "1" },
+                { serie: "1ª SÉRIE", hits: "60,0%", disciplina: "Matemática - 2700", descritor: "Resolver equações completas do 2º grau.", numQuestoes: "2" },
+                { serie: "1ª SÉRIE", hits: "63,3%", disciplina: "Matemática - 2700", descritor: "A ideia de produtos notáveis.", numQuestoes: "1" },
+                { serie: "1ª SÉRIE", hits: "70,0%", disciplina: "Matemática - 2700", descritor: "Obtenção das coordenadas do vértice da parábola.", numQuestoes: "2" },
+                { serie: "1ª SÉRIE", hits: "83,3%", disciplina: "Matemática - 2700", descritor: "Raiz quadrada e raiz cúbica de números racionais.", numQuestoes: "3" },
+                { serie: "1ª SÉRIE", hits: "90,0%", disciplina: "Matemática - 2700", descritor: "Calcular o valor numérico de uma expressão algébrica.", numQuestoes: "1" },
+                { serie: "1ª SÉRIE", hits: "93,3%", disciplina: "Matemática - 2700", descritor: "Utilizar relações métricas do triângulo retângulo em problemas.", numQuestoes: "2" }
+              ]
+            }
+          }
         }
       };
 
@@ -863,13 +951,23 @@
       const tableWrap = document.getElementById("table-wrap");
       const filtersRoot = document.getElementById("filters");
       const kpisRoot = document.getElementById("kpis");
+      const analysisSwitch = document.getElementById("analysis-switch");
+      const analysisButtons = Array.from(document.querySelectorAll("[data-analysis-mode]"));
       const tableTitle = document.getElementById("table-title");
       const placeholderNote = document.getElementById("placeholder-note");
       const legend = document.getElementById("legend");
       const tabs = Array.from(document.querySelectorAll(".tab"));
 
-      let activeView = "descritor";
+      let activeView = "questao";
+      let activeAnalysisMode = "questao";
       let currentSort = { key: null, direction: "asc" };
+
+      function getRenderedView() {
+        const view = views[activeView];
+        if (!view) return null;
+        if (!view.analysisModes) return view;
+        return view.analysisModes[activeAnalysisMode] || view.analysisModes.questao || Object.values(view.analysisModes)[0];
+      }
 
       function normalizeNumber(value) {
         return Number(String(value).replace(/\./g, "").replace("%", "").replace(",", "."));
@@ -891,7 +989,8 @@
         if (key === "hits") return normalizeNumber(row.hits || "0");
         if (key === "farol") return farolWeight(row.farol);
 
-        const activeSubjectColumns = views[activeView]?.subjects || subjectColumns;
+        const renderedView = getRenderedView();
+        const activeSubjectColumns = renderedView?.subjects || subjectColumns;
         const subjectIndex = activeSubjectColumns.findIndex((column) => column.key === key);
         if (subjectIndex >= 0) return normalizeNumber(row.subjects[subjectIndex]);
         return "";
@@ -923,6 +1022,18 @@
           card.className = "kpi";
           card.innerHTML = `<h2>${kpi.label}</h2><strong>${kpi.value}</strong>`;
           kpisRoot.appendChild(card);
+        });
+      }
+
+      function buildAnalysisSwitch(view) {
+        const hasAnalysisModes = Boolean(view.analysisModes);
+        analysisSwitch.hidden = !hasAnalysisModes;
+        if (!hasAnalysisModes) return;
+
+        analysisButtons.forEach((button) => {
+          const isActive = button.dataset.analysisMode === activeAnalysisMode;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-pressed", isActive ? "true" : "false");
         });
       }
 
@@ -969,9 +1080,11 @@
       }
 
       function buildRow(row, isTotal = false) {
-        if (views[activeView].descriptorColumns) {
+        const renderedView = getRenderedView();
+
+        if (renderedView?.descriptorColumns) {
           const tr = document.createElement("tr");
-          tr.innerHTML = views[activeView].descriptorColumns
+          tr.innerHTML = renderedView.descriptorColumns
             .map((column) => {
               const value = row[column.key] || "";
               const classes = [column.cellClass].filter(Boolean).join(" ");
@@ -984,21 +1097,21 @@
 
         const tr = document.createElement("tr");
         if (isTotal) tr.className = "total-row";
-        const activeSubjectColumns = views[activeView].subjects || subjectColumns;
+        const activeSubjectColumns = renderedView?.subjects || subjectColumns;
 
         const metricCells = [
           `<td class="metric-part">${row.participation}</td>`,
           `<td class="metric-hit">${row.hits}</td>`
         ];
 
-        if (views[activeView].showFarol !== false) {
+        if (renderedView?.showFarol !== false) {
           metricCells.push(`<td><div class="farol-cell"><span class="farol-symbol farol-${row.farol}">${farolSymbol(row.farol)}</span></div></td>`);
         }
 
         tr.innerHTML = [
-          `<td class="sticky ${views[activeView].firstColumn.key === "ra" ? "ra-cell" : "name-cell"}">${row[views[activeView].firstColumn.key] || ""}</td>`,
-          views[activeView].secondColumn
-            ? `<td class="sticky-2 name-cell-tight">${row[views[activeView].secondColumn.key] || ""}</td>`
+          `<td class="sticky ${renderedView.firstColumn.key === "ra" ? "ra-cell" : "name-cell"}">${row[renderedView.firstColumn.key] || ""}</td>`,
+          renderedView.secondColumn
+            ? `<td class="sticky-2 name-cell-tight">${row[renderedView.secondColumn.key] || ""}</td>`
             : `<td class="sticky-2 students">${row.students}</td>`,
           ...metricCells,
           ...row.subjects.slice(0, activeSubjectColumns.length).map((value) => `<td>${value}</td>`)
@@ -1086,6 +1199,7 @@
         if (!view) {
           filtersRoot.innerHTML = "";
           kpisRoot.innerHTML = "";
+          analysisSwitch.hidden = true;
           tableTitle.textContent = "";
           tableHead.innerHTML = "";
           tableBody.innerHTML = "";
@@ -1093,22 +1207,40 @@
           return;
         }
 
+        if (view.analysisModes && !view.analysisModes[activeAnalysisMode]) {
+          activeAnalysisMode = Object.keys(view.analysisModes)[0];
+        }
+
+        const renderedView = getRenderedView();
         placeholderNote.hidden = true;
-        legend.hidden = view.showLegend === false;
-        tableWrap.classList.toggle("no-legend", view.showLegend === false);
-        document.querySelector(".board").style.setProperty("--sticky-second-left", view.secondColumn ? "120px" : "260px");
+        const showLegend = renderedView.showLegend !== false && view.showLegend !== false;
+        legend.hidden = !showLegend;
+        tableWrap.classList.toggle("no-legend", !showLegend);
+        document.querySelector(".board").style.setProperty("--sticky-second-left", renderedView.secondColumn ? "120px" : "260px");
         buildFilters(view);
         buildKpis(view);
-        tableTitle.textContent = view.title;
-        buildTableHead(view);
+        buildAnalysisSwitch(view);
+        tableTitle.textContent = renderedView.title || view.title;
+        buildTableHead(renderedView);
         updateSortIndicators();
-        renderRows(view);
-        bindHeaderSorting(view);
+        renderRows(renderedView);
+        bindHeaderSorting(renderedView);
       }
+
+      analysisButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeAnalysisMode = button.dataset.analysisMode;
+          currentSort = { key: null, direction: "asc" };
+          renderView();
+        });
+      });
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           activeView = tab.dataset.view;
+          if (views[activeView]?.analysisModes) {
+            activeAnalysisMode = Object.keys(views[activeView].analysisModes)[0];
+          }
           currentSort = { key: null, direction: "asc" };
           setActiveTab();
           renderView();
