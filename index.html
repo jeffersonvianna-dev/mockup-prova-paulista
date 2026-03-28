@@ -969,27 +969,46 @@
       };
 
       const technicalCourses = ["ADM", "AGRO", "CD", "DS", "ENF", "FAR", "HOS", "LOG", "VEN", "MA", "ELE"];
-      const digitalSeriesOptions = ["Todos", "2ª Série", "3ª Série"];
       const digitalTeachingOptions = ["Todos", "Novo Ensino Médio", "Técnico", "Expansão"];
       const digitalItineraryOptions = ["Todos", "Matemática e Natureza", "Linguagens e Humanas", ...technicalCourses];
 
-      function formatScore(value) {
-        return value.toFixed(1).replace(".", ",");
+      function formatPercent(value) {
+        return `${(value * 10).toFixed(1).replace(".", ",")}%`;
       }
 
       function buildDigitalProfiles(baseScore) {
         const coreProfiles = [
-          { serie: "2ª Série", tipoEnsino: "Novo Ensino Médio", itinerario: "Matemática e Natureza", nota: formatScore(baseScore + 0.2) },
-          { serie: "3ª Série", tipoEnsino: "Novo Ensino Médio", itinerario: "Linguagens e Humanas", nota: formatScore(baseScore + 0.4) },
-          { serie: "2ª Série", tipoEnsino: "Expansão", itinerario: "Matemática e Natureza", nota: formatScore(baseScore + 0.1) },
-          { serie: "3ª Série", tipoEnsino: "Expansão", itinerario: "Linguagens e Humanas", nota: formatScore(baseScore + 0.3) }
+          {
+            tipoEnsino: "Novo Ensino Médio",
+            itinerario: "Matemática e Natureza",
+            segundaSerie: formatPercent(baseScore + 0.2),
+            terceiraSerie: formatPercent(baseScore + 0.4)
+          },
+          {
+            tipoEnsino: "Novo Ensino Médio",
+            itinerario: "Linguagens e Humanas",
+            segundaSerie: formatPercent(baseScore + 0.1),
+            terceiraSerie: formatPercent(baseScore + 0.3)
+          },
+          {
+            tipoEnsino: "Expansão",
+            itinerario: "Matemática e Natureza",
+            segundaSerie: formatPercent(baseScore + 0.15),
+            terceiraSerie: formatPercent(baseScore + 0.35)
+          },
+          {
+            tipoEnsino: "Expansão",
+            itinerario: "Linguagens e Humanas",
+            segundaSerie: formatPercent(baseScore + 0.05),
+            terceiraSerie: formatPercent(baseScore + 0.25)
+          }
         ];
 
         const technicalProfiles = technicalCourses.map((course, index) => ({
-          serie: index % 2 === 0 ? "2ª Série" : "3ª Série",
           tipoEnsino: "Técnico",
           itinerario: course,
-          nota: formatScore(baseScore + 0.15 + (index % 5) * 0.1)
+          segundaSerie: formatPercent(baseScore + 0.15 + (index % 5) * 0.1),
+          terceiraSerie: formatPercent(baseScore + 0.25 + (index % 4) * 0.1)
         }));
 
         return [...coreProfiles, ...technicalProfiles];
@@ -998,7 +1017,6 @@
       function createDigitalFilters(baseFilters) {
         return [
           ...baseFilters,
-          { label: "Série", options: digitalSeriesOptions },
           { label: "Tipo de Ensino", options: digitalTeachingOptions },
           { label: "Itinerário", options: digitalItineraryOptions }
         ];
@@ -1016,10 +1034,10 @@
         }
 
         columns.push(
-          { key: "serie", label: "Série", type: "text", cellClass: "descriptor-serie" },
           { key: "tipoEnsino", label: "Tipo de Ensino", type: "text", cellClass: "descriptor-type" },
           { key: "itinerario", label: "Itinerário", type: "text", cellClass: "left-text descriptor-itinerary" },
-          { key: "nota", label: "Nota", type: "text", cellClass: "descriptor-score" }
+          { key: "segundaSerie", label: "2ª Série", type: "text", cellClass: "descriptor-score" },
+          { key: "terceiraSerie", label: "3ª Série", type: "text", cellClass: "descriptor-score" }
         );
 
         return columns;
@@ -1044,7 +1062,7 @@
           filters: createDigitalFilters([]),
           kpis: [
             { label: "(%) de Participação", value: "94,1%" },
-            { label: "Nota Média", value: "6,9" }
+            { label: "(%) Acertos", value: "69,0%" }
           ],
           rows: buildDigitalProfiles(6.4)
         }),
@@ -1053,7 +1071,7 @@
           filters: createDigitalFilters([{ label: "Regional", options: ["Mauá"] }]),
           kpis: [
             { label: "(%) de Participação", value: "93,6%" },
-            { label: "Nota Média", value: "6,8" }
+            { label: "(%) Acertos", value: "68,0%" }
           ],
           rows: buildDigitalProfiles(6.3)
         }),
@@ -1065,7 +1083,7 @@
           ]),
           kpis: [
             { label: "(%) de Participação", value: "95,0%" },
-            { label: "Nota Média", value: "7,0" }
+            { label: "(%) Acertos", value: "70,0%" }
           ],
           rows: buildDigitalProfiles(6.5)
         }),
@@ -1078,7 +1096,7 @@
           ]),
           kpis: [
             { label: "(%) de Participação", value: "96,2%" },
-            { label: "Nota Média", value: "6,7" }
+            { label: "(%) Acertos", value: "67,0%" }
           ],
           rows: buildDigitalProfiles(6.1)
         })
