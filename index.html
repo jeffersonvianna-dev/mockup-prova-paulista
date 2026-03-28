@@ -550,6 +550,37 @@
         min-width: 290px;
       }
 
+      .descriptor-entity {
+        width: 280px;
+        min-width: 280px;
+      }
+
+      .descriptor-ra {
+        width: 130px;
+        min-width: 130px;
+      }
+
+      .descriptor-name {
+        width: 280px;
+        min-width: 280px;
+      }
+
+      .descriptor-type {
+        width: 180px;
+        min-width: 180px;
+      }
+
+      .descriptor-itinerary {
+        width: 260px;
+        min-width: 260px;
+      }
+
+      .descriptor-score {
+        width: 110px;
+        min-width: 110px;
+        max-width: 110px;
+      }
+
       .descriptor-descritor {
         width: 470px;
         min-width: 470px;
@@ -666,11 +697,8 @@
         <section class="kpis" id="kpis" aria-label="Indicadores principais"></section>
 
         <section class="analysis-switch" id="analysis-switch" aria-label="Alternar análise" hidden>
-          <span class="analysis-switch-label">Analisar por:</span>
-          <div class="analysis-switch-buttons" role="tablist" aria-label="Analisar por">
-            <button class="analysis-switch-button" data-analysis-mode="questao" type="button">Questão</button>
-            <button class="analysis-switch-button" data-analysis-mode="descritor" type="button">Descritor</button>
-          </div>
+          <span class="analysis-switch-label" id="analysis-switch-label">Analisar por:</span>
+          <div class="analysis-switch-buttons" id="analysis-switch-buttons" role="tablist" aria-label="Analisar por"></div>
         </section>
 
         <h2 class="table-title" id="table-title"></h2>
@@ -940,13 +968,203 @@
         }
       };
 
+      const technicalCourses = ["ADM", "AGRO", "CD", "DS", "ENF", "FAR", "HOS", "LOG", "VEN", "MA", "ELE"];
+      const digitalSeriesOptions = ["Todos", "2ª Série", "3ª Série"];
+      const digitalTeachingOptions = ["Todos", "Novo Ensino Médio", "Técnico", "Expansão"];
+      const digitalItineraryOptions = ["Todos", "Matemática e Natureza", "Linguagens e Humanas", ...technicalCourses];
+
+      function formatScore(value) {
+        return value.toFixed(1).replace(".", ",");
+      }
+
+      function buildDigitalProfiles(baseScore) {
+        const coreProfiles = [
+          { serie: "2ª Série", tipoEnsino: "Novo Ensino Médio", itinerario: "Matemática e Natureza", nota: formatScore(baseScore + 0.2) },
+          { serie: "3ª Série", tipoEnsino: "Novo Ensino Médio", itinerario: "Linguagens e Humanas", nota: formatScore(baseScore + 0.4) },
+          { serie: "2ª Série", tipoEnsino: "Expansão", itinerario: "Matemática e Natureza", nota: formatScore(baseScore + 0.1) },
+          { serie: "3ª Série", tipoEnsino: "Expansão", itinerario: "Linguagens e Humanas", nota: formatScore(baseScore + 0.3) }
+        ];
+
+        const technicalProfiles = technicalCourses.map((course, index) => ({
+          serie: index % 2 === 0 ? "2ª Série" : "3ª Série",
+          tipoEnsino: "Técnico",
+          itinerario: course,
+          nota: formatScore(baseScore + 0.15 + (index % 5) * 0.1)
+        }));
+
+        return [...coreProfiles, ...technicalProfiles];
+      }
+
+      function buildDigitalRows(entities, baseScore) {
+        return buildDigitalProfiles(baseScore).map((profile, index) => ({
+          entity: entities[index % entities.length],
+          ...profile
+        }));
+      }
+
+      function buildTurmaDigitalRows(students, baseScore) {
+        return buildDigitalProfiles(baseScore).map((profile, index) => ({
+          entity: students[index % students.length].ra,
+          name: students[index % students.length].name,
+          ...profile
+        }));
+      }
+
+      function createDigitalFilters(baseFilters) {
+        return [
+          ...baseFilters,
+          { label: "Série", options: digitalSeriesOptions },
+          { label: "Tipo de Ensino", options: digitalTeachingOptions },
+          { label: "Itinerário", options: digitalItineraryOptions }
+        ];
+      }
+
+      function createDigitalColumns(firstLabel, secondLabel) {
+        const columns = [
+          { key: "entity", label: firstLabel, type: "text", cellClass: `left-text ${secondLabel ? "descriptor-ra" : "descriptor-entity"}` }
+        ];
+
+        if (secondLabel) {
+          columns.push({ key: "name", label: secondLabel, type: "text", cellClass: "left-text descriptor-name" });
+        }
+
+        columns.push(
+          { key: "serie", label: "Série", type: "text", cellClass: "descriptor-serie" },
+          { key: "tipoEnsino", label: "Tipo de Ensino", type: "text", cellClass: "descriptor-type" },
+          { key: "itinerario", label: "Itinerário", type: "text", cellClass: "left-text descriptor-itinerary" },
+          { key: "nota", label: "Nota", type: "text", cellClass: "descriptor-score" }
+        );
+
+        return columns;
+      }
+
+      function createDigitalMode(config) {
+        return {
+          switchLabel: "Digital",
+          title: config.title,
+          filters: config.filters,
+          kpis: config.kpis,
+          showLegend: false,
+          showFarol: false,
+          descriptorColumns: createDigitalColumns(config.firstLabel, config.secondLabel),
+          rows: config.rows
+        };
+      }
+
+      const digitalModes = {
+        rede: createDigitalMode({
+          title: "REDE ESTADUAL DE ENSINO",
+          firstLabel: "Regional",
+          filters: createDigitalFilters([]),
+          kpis: [
+            { label: "(%) de Participação", value: "94,1%" },
+            { label: "Nota Média", value: "6,9" }
+          ],
+          rows: buildDigitalRows(["JALES", "MAUÁ", "OURINHOS", "SERTÃOZINHO", "ADAMANTINA"], 6.4)
+        }),
+        regional: createDigitalMode({
+          title: "DIRETORIA REGIONAL DE ENSINO",
+          firstLabel: "Escolas",
+          filters: createDigitalFilters([{ label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] }]),
+          kpis: [
+            { label: "(%) de Participação", value: "93,6%" },
+            { label: "Nota Média", value: "6,8" }
+          ],
+          rows: buildDigitalRows(
+            [
+              "ALVINO BITTENCOURT PROFESSOR - 2045",
+              "CONSUELO FREIRE BRANDÃO PROFESSORA - 228",
+              "JARDIM MAGALI - 925858",
+              "JOSE MARCELINO DA FONSECA MAIOR - 863",
+              "ADEMAR HIROSHI SUDA PROF - 1351"
+            ],
+            6.3
+          )
+        }),
+        escola: createDigitalMode({
+          title: "ESCOLA ESTADUAL",
+          firstLabel: "Turmas",
+          filters: createDigitalFilters([
+            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
+            { label: "Escola", options: ["Todos", "Alvino Bittencourt Professor - 2045", "Consuelo Freire Brandão Professora - 228", "Jardim Magali - 925858"] }
+          ]),
+          kpis: [
+            { label: "(%) de Participação", value: "95,0%" },
+            { label: "Nota Média", value: "7,0" }
+          ],
+          rows: buildDigitalRows(
+            [
+              "2ª SÉRIE A MANHÃ - 40317144",
+              "2ª SÉRIE B INTEGRAL - 40317143",
+              "3ª SÉRIE A MANHÃ - 40100057",
+              "3ª SÉRIE B NOITE - 40100058",
+              "3ª SÉRIE TÉCNICO ADM - 4050"
+            ],
+            6.5
+          )
+        }),
+        turma: createDigitalMode({
+          title: "RESULTADOS DA TURMA",
+          firstLabel: "NR RA",
+          secondLabel: "Nome",
+          filters: createDigitalFilters([
+            { label: "Regional", options: ["Todos", "Jales", "Mauá", "Ourinhos", "Sertãozinho"] },
+            { label: "Escola", options: ["Todos", "Alvino Bittencourt Professor - 2045", "Consuelo Freire Brandão Professora - 228", "Jardim Magali - 925858"] },
+            { label: "Selecione uma Turma", options: ["2ª SÉRIE A MANHÃ - 40317144", "2ª SÉRIE B INTEGRAL - 40317143", "3ª SÉRIE A NOITE - 40100057"] }
+          ]),
+          kpis: [
+            { label: "(%) de Participação", value: "96,2%" },
+            { label: "Nota Média", value: "6,7" }
+          ],
+          rows: buildTurmaDigitalRows(
+            [
+              { ra: "000114426046", name: "AILSON DOS ANJOS CARMO JUNIOR" },
+              { ra: "000114390373", name: "ANA CLARA GONCALVES SCHMIDT" },
+              { ra: "000114393751", name: "ANA VITORIA PEREIRA DA SILVA" },
+              { ra: "000115998259", name: "BRENO SASAKI" },
+              { ra: "000114744468", name: "DANDARA VITORIA PEREIRA DA SILVA" },
+              { ra: "000114127285", name: "DAVI FERREIRA SILVA" },
+              { ra: "000115326733", name: "ENZO ALVES DA SILVA" },
+              { ra: "000115324006", name: "GISELE SOUZA DE JESUS" },
+              { ra: "000120341360", name: "ISABELLY JESUS DA SILVA" },
+              { ra: "000114457632", name: "JOAO VITOR ARAUJO DE BARROS" },
+              { ra: "000114418082", name: "KAMILLY LORRAYNE ARIMATEIA DAMACENO" },
+              { ra: "000115844259", name: "KRISTAL RODRIGUES RAINHO" },
+              { ra: "000114298720", name: "LORENZO DORNELAS ESTALISE COSTA" },
+              { ra: "000114811856", name: "LUIZ EDUARDO CORREIA PEDRO" },
+              { ra: "000112561457", name: "CARLOS HENRIQUE MORAIS LINO" }
+            ],
+            6.1
+          )
+        })
+      };
+
+      ["rede", "regional", "escola", "turma"].forEach((viewKey) => {
+        const baseView = views[viewKey];
+        views[viewKey] = {
+          analysisSwitchLabel: "Prova:",
+          analysisModes: {
+            fisica: {
+              ...baseView,
+              switchLabel: "Física"
+            },
+            digital: digitalModes[viewKey]
+          }
+        };
+      });
+
+      views.questao.analysisSwitchLabel = "Analisar por:";
+      views.questao.analysisModes.questao.switchLabel = "Questão";
+      views.questao.analysisModes.descritor.switchLabel = "Descritor";
+
       const tableHead = document.getElementById("table-head");
       const tableBody = document.getElementById("table-body");
       const tableWrap = document.getElementById("table-wrap");
       const filtersRoot = document.getElementById("filters");
       const kpisRoot = document.getElementById("kpis");
       const analysisSwitch = document.getElementById("analysis-switch");
-      const analysisButtons = Array.from(document.querySelectorAll("[data-analysis-mode]"));
+      const analysisSwitchLabel = document.getElementById("analysis-switch-label");
+      const analysisButtonsRoot = document.getElementById("analysis-switch-buttons");
       const tableTitle = document.getElementById("table-title");
       const placeholderNote = document.getElementById("placeholder-note");
       const legend = document.getElementById("legend");
@@ -960,11 +1178,24 @@
         const view = views[activeView];
         if (!view) return null;
         if (!view.analysisModes) return view;
-        return view.analysisModes[activeAnalysisMode] || view.analysisModes.questao || Object.values(view.analysisModes)[0];
+        const defaultMode = Object.keys(view.analysisModes)[0];
+        const selectedMode = view.analysisModes[activeAnalysisMode] ? activeAnalysisMode : defaultMode;
+        if (selectedMode !== activeAnalysisMode) activeAnalysisMode = selectedMode;
+        return { ...view, ...view.analysisModes[selectedMode] };
       }
 
       function normalizeNumber(value) {
         return Number(String(value).replace(/\./g, "").replace("%", "").replace(",", "."));
+      }
+
+      function parseNumericValue(value) {
+        const rawValue = String(value ?? "").trim();
+        if (!rawValue) return null;
+        if (/^-?\d+(?:[.,]\d+)?%?$/.test(rawValue)) {
+          return normalizeNumber(rawValue);
+        }
+
+        return null;
       }
 
       function farolWeight(color) {
@@ -1024,15 +1255,22 @@
       }
 
       function buildAnalysisSwitch(view) {
-        const hasAnalysisModes = Boolean(view.analysisModes);
+        const analysisModes = view.analysisModes ? Object.entries(view.analysisModes) : [];
+        const hasAnalysisModes = analysisModes.length > 0;
         analysisSwitch.hidden = !hasAnalysisModes;
-        if (!hasAnalysisModes) return;
+        if (!hasAnalysisModes) {
+          analysisButtonsRoot.innerHTML = "";
+          return;
+        }
 
-        analysisButtons.forEach((button) => {
-          const isActive = button.dataset.analysisMode === activeAnalysisMode;
-          button.classList.toggle("active", isActive);
-          button.setAttribute("aria-pressed", isActive ? "true" : "false");
-        });
+        analysisSwitchLabel.textContent = view.analysisSwitchLabel || "Analisar por:";
+        analysisButtonsRoot.setAttribute("aria-label", (view.analysisSwitchLabel || "Analisar por:").replace(":", ""));
+        analysisButtonsRoot.innerHTML = analysisModes
+          .map(([modeKey, modeConfig]) => {
+            const isActive = modeKey === activeAnalysisMode;
+            return `<button class="analysis-switch-button${isActive ? " active" : ""}" data-analysis-mode="${modeKey}" type="button" aria-pressed="${isActive ? "true" : "false"}">${modeConfig.switchLabel || modeKey}</button>`;
+          })
+          .join("");
       }
 
       function buildTableHead(view) {
@@ -1127,8 +1365,8 @@
             rows.sort((a, b) => {
               const valueA = a[currentSort.key] || "";
               const valueB = b[currentSort.key] || "";
-              const numericA = valueA.includes("%") ? normalizeNumber(valueA) : null;
-              const numericB = valueB.includes("%") ? normalizeNumber(valueB) : null;
+              const numericA = parseNumericValue(valueA);
+              const numericB = parseNumericValue(valueB);
 
               if (numericA !== null && numericB !== null) {
                 return currentSort.direction === "asc" ? numericA - numericB : numericB - numericA;
@@ -1216,8 +1454,8 @@
         legend.hidden = !showLegend;
         tableWrap.classList.toggle("no-legend", !showLegend);
         document.querySelector(".board").style.setProperty("--sticky-second-left", renderedView.secondColumn ? "120px" : "260px");
-        buildFilters(view);
-        buildKpis(view);
+        buildFilters(renderedView);
+        buildKpis(renderedView);
         buildAnalysisSwitch(view);
         tableTitle.textContent = renderedView.title || view.title;
         buildTableHead(renderedView);
@@ -1226,18 +1464,19 @@
         bindHeaderSorting(renderedView);
       }
 
-      analysisButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          activeAnalysisMode = button.dataset.analysisMode;
-          currentSort = { key: null, direction: "asc" };
-          renderView();
-        });
+      analysisButtonsRoot.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-analysis-mode]");
+        if (!button) return;
+
+        activeAnalysisMode = button.dataset.analysisMode;
+        currentSort = { key: null, direction: "asc" };
+        renderView();
       });
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
           activeView = tab.dataset.view;
-          if (views[activeView]?.analysisModes) {
+          if (views[activeView]?.analysisModes && !views[activeView].analysisModes[activeAnalysisMode]) {
             activeAnalysisMode = Object.keys(views[activeView].analysisModes)[0];
           }
           currentSort = { key: null, direction: "asc" };
